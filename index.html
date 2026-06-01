@@ -1,0 +1,1029 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>民法演習サブノート210抜粋</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: "Noto Serif JP", "游明朝", "Yu Mincho", serif;
+    background: #fff;
+    color: #000;
+    line-height: 1.8;
+  }
+  header {
+    border-bottom: 2px solid #000;
+    padding: 16px 24px;
+  }
+  header h1 { font-size: 1.2rem; font-weight: 700; letter-spacing: 0.08em; }
+  header p { font-size: 0.8rem; margin-top: 4px; color: #333; }
+  .container { max-width: 960px; margin: 0 auto; padding: 24px; }
+
+  .api-note {
+    border: 1px solid #000;
+    padding: 10px 14px;
+    font-size: 0.82rem;
+    margin-bottom: 16px;
+  }
+  .api-note input {
+    font-family: monospace;
+    font-size: 0.82rem;
+    border: 1px solid #000;
+    padding: 4px 8px;
+    width: 320px;
+    max-width: 100%;
+    background: #fff;
+    outline: none;
+  }
+
+  .plan-nav {
+    border: 1px solid #000;
+    padding: 12px 16px;
+    margin-bottom: 16px;
+  }
+  .plan-nav .row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+  .plan-nav label { font-size: 0.85rem; font-weight: 700; white-space: nowrap; }
+  .plan-nav select {
+    font-family: inherit;
+    font-size: 0.9rem;
+    padding: 4px 8px;
+    border: 1px solid #000;
+    background: #fff;
+    min-width: 200px;
+  }
+  .plan-summary {
+    font-size: 0.85rem;
+    border-top: 1px solid #ccc;
+    padding-top: 10px;
+    margin-top: 4px;
+  }
+  .plan-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 8px;
+  }
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 3px 10px;
+    border: 1px solid #000;
+    font-size: 0.82rem;
+    cursor: pointer;
+    background: #fff;
+  }
+  .chip:hover { background: #eee; }
+  .chip.done { background: #000; color: #fff; }
+  .chip.active { outline: 2px solid #000; outline-offset: 2px; }
+  .chip .mark { font-weight: 900; }
+
+  .problem-nav {
+    border: 1px solid #000;
+    padding: 12px 16px;
+    margin-bottom: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: center;
+  }
+  .problem-nav select {
+    font-family: inherit;
+    font-size: 0.9rem;
+    padding: 4px 8px;
+    border: 1px solid #000;
+    background: #fff;
+    min-width: 280px;
+    max-width: 100%;
+  }
+
+  .save-note {
+    font-size: 0.78rem;
+    color: #333;
+    margin-top: 8px;
+  }
+
+  .section {
+    border: 1px solid #000;
+    margin-bottom: 16px;
+  }
+  .section-header {
+    background: #000;
+    color: #fff;
+    padding: 8px 14px;
+    font-size: 0.88rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .section-header .num {
+    background: #fff;
+    color: #000;
+    border-radius: 50%;
+    width: 22px;
+    height: 22px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.75rem;
+    font-weight: 900;
+    flex-shrink: 0;
+  }
+  .section-body { padding: 16px; font-size: 0.92rem; }
+  .hidden-block { display: none; }
+  .hidden-block.is-open { display: block; }
+
+  .text-block { white-space: pre-wrap; line-height: 1.9; }
+
+  #answer-area {
+    width: 100%;
+    min-height: 200px;
+    font-family: inherit;
+    font-size: 0.92rem;
+    line-height: 1.8;
+    border: 1px solid #000;
+    padding: 12px;
+    resize: vertical;
+    background: #fff;
+    outline: none;
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    padding: 8px 18px;
+    border: 2px solid #000;
+    background: #fff;
+    color: #000;
+    font-family: inherit;
+    font-size: 0.88rem;
+    font-weight: 700;
+    cursor: pointer;
+  }
+  .btn:hover { background: #000; color: #fff; }
+  .btn:disabled { opacity: 0.4; cursor: not-allowed; }
+  .btn-row { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 10px; }
+
+  #score-display { font-size: 1.8rem; font-weight: 900; margin-bottom: 8px; }
+  .score-bar-outer {
+    height: 8px;
+    background: #fff;
+    border: 1px solid #000;
+    margin: 8px 0 12px;
+  }
+  .score-bar-inner { height: 100%; background: #000; transition: width 0.4s; }
+
+  .ai-output { white-space: pre-wrap; line-height: 1.9; margin-top: 12px; }
+  .explain-full-output {
+    display: block;
+    width: 100%;
+    max-height: none;
+    height: auto;
+    overflow: visible;
+    word-break: break-word;
+    overflow-wrap: anywhere;
+  }
+  .explain-qa-block {
+    margin-top: 20px;
+    padding-top: 16px;
+    border-top: 1px solid #000;
+  }
+  .explain-qa-block h3 {
+    font-size: 0.88rem;
+    font-weight: 700;
+    margin-bottom: 10px;
+  }
+  #explain-question {
+    width: 100%;
+    min-height: 90px;
+    font-family: inherit;
+    font-size: 0.92rem;
+    line-height: 1.8;
+    border: 1px solid #000;
+    padding: 10px;
+    resize: vertical;
+    background: #fff;
+    outline: none;
+  }
+  .explain-qa-thread { margin-top: 14px; }
+  .explain-qa-item {
+    border: 1px solid #000;
+    padding: 12px;
+    margin-bottom: 10px;
+    font-size: 0.9rem;
+  }
+  .explain-qa-item .qa-label {
+    font-weight: 700;
+    font-size: 0.82rem;
+    margin-bottom: 6px;
+  }
+  .explain-qa-item .qa-body {
+    white-space: pre-wrap;
+    line-height: 1.9;
+    word-break: break-word;
+    overflow-wrap: anywhere;
+  }
+  .placeholder { color: #555; font-size: 0.9rem; }
+
+  html, body { min-height: 100%; overflow-y: auto; }
+  .section-body { overflow: visible; }
+
+  .spinner {
+    display: inline-block;
+    width: 14px; height: 14px;
+    border: 2px solid #ccc;
+    border-top-color: #000;
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+    vertical-align: middle;
+    margin-right: 6px;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+</style>
+</head>
+<body>
+<header>
+  <h1>民法演習サブノート210抜粋</h1>
+  <p>plan.pdf の学習予定に沿って演習（奇数ページ＝問題、偶数ページ＝正解・解説）</p>
+</header>
+<div class="container">
+
+  <div class="api-note">
+    <strong>Gemini API キー：</strong>
+    <input type="password" id="gemini-key" placeholder="config.local.js または手入力" autocomplete="off" />
+    <span style="margin-left:8px;font-size:0.78rem;">採点（③）・解説（⑤）・相談（⑥）に使用</span>
+    <div style="margin-top:6px;font-size:0.76rem;color:#333;">
+      GitHub 公開用： <code>config.example.js</code> を <code>config.local.js</code> にコピーしてキーを設定（<code>config.local.js</code> は Git に含まれません）
+    </div>
+  </div>
+
+  <div class="plan-nav">
+    <div class="row">
+      <label for="date-select">学習日（plan.pdf）：</label>
+      <select id="date-select" onchange="onDateChange()"></select>
+      <span id="day-progress" style="font-size:0.85rem;font-weight:700;"></span>
+    </div>
+    <div class="plan-summary">
+      <div id="day-label">—</div>
+      <div class="plan-chips" id="day-chips"></div>
+    </div>
+  </div>
+
+  <div class="problem-nav">
+    <label for="problem-select">問題：</label>
+    <select id="problem-select" onchange="loadProblem()"></select>
+  </div>
+
+  <div class="section">
+    <div class="section-header"><span class="num">1</span>問題文</div>
+    <div class="section-body"><div id="problem-text" class="text-block placeholder">読み込み中…</div></div>
+  </div>
+
+  <div class="section">
+    <div class="section-header"><span class="num">2</span>答案記入欄</div>
+    <div class="section-body">
+      <textarea id="answer-area" placeholder="ここにあなたの答案を記入してください…" oninput="onAnswerInput()"></textarea>
+      <div class="btn-row">
+        <button class="btn" onclick="saveAnswer()">答案を保存</button>
+        <button class="btn" onclick="toggleDone()">実施済みにする / 解除</button>
+      </div>
+      <div class="save-note" id="save-status">答案はブラウザに自動保存されます。</div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-header"><span class="num">3</span>採点結果（Gemini・正解に基づく）</div>
+    <div class="section-body">
+      <div class="btn-row">
+        <button class="btn" id="grade-btn" onclick="grade()">②の答案を採点する（Gemini）</button>
+      </div>
+      <div id="score-display" style="margin-top:14px;">—— / 100点</div>
+      <div class="score-bar-outer"><div class="score-bar-inner" id="score-bar" style="width:0%"></div></div>
+      <div id="score-comment" class="ai-output placeholder">採点ボタンを押すと、④の正解を基準に②の答案を採点します。</div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-header"><span class="num">4</span>正解・解説（PDF偶数ページ）</div>
+    <div class="section-body">
+      <div class="btn-row">
+        <button class="btn" id="toggle-correct-btn" onclick="toggleCorrect()">正解・解説を表示する</button>
+      </div>
+      <div id="correct-panel" class="hidden-block" style="margin-top:12px;">
+        <div id="correct-text" class="text-block placeholder">問題を選択してください。</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-header"><span class="num">5</span>Gemini による平易な解説</div>
+    <div class="section-body">
+      <div class="btn-row">
+        <button class="btn" id="explain-btn" onclick="explain()">問題と正解を平易に解説する</button>
+      </div>
+      <div id="explain-output" class="ai-output explain-full-output placeholder">ボタンを押すと、問題文と④の正解内容を、平易な言葉で優しく丁寧に解説します。</div>
+
+      <div id="explain-qa-block" class="explain-qa-block" style="display:none;">
+        <h3>解説について質問する</h3>
+        <textarea id="explain-question" placeholder="⑤の解説でわからない点を質問してください…"></textarea>
+        <div class="btn-row">
+          <button class="btn" id="explain-ask-btn" onclick="askExplain()">質問を送信（Gemini）</button>
+        </div>
+        <div id="explain-qa-thread" class="explain-qa-thread"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-header"><span class="num">6</span>答案の改善点を相談（Gemini・⑤を踏まえる）</div>
+    <div class="section-body">
+      <div class="btn-row">
+        <button class="btn" id="consult-btn" onclick="consult()">改善点を相談する</button>
+      </div>
+      <div id="consult-output" class="ai-output placeholder">⑤の解説を踏まえ、②の答案の改善点について相談します。</div>
+    </div>
+  </div>
+
+</div>
+
+<script src="config.local.js"></script>
+<script src="problems.js"></script>
+<script src="plan.js"></script>
+<script>
+const STORAGE_KEY = 'minpo-study-records';
+let problems = [];
+let studyPlan = [];
+let records = loadRecords();
+let saveTimer = null;
+let correctVisible = false;
+let currentProblemId = null;
+
+function loadRecords() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return { answers: {}, doneByDate: {} };
+    const data = JSON.parse(raw);
+    return {
+      answers: data.answers || {},
+      doneByDate: data.doneByDate || {}
+    };
+  } catch {
+    return { answers: {}, doneByDate: {} };
+  }
+}
+
+function saveRecords() {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(records));
+}
+
+function getCurrentDay() {
+  const key = document.getElementById('date-select').value;
+  return studyPlan.find(d => d.dateKey === key);
+}
+
+function isDoneOnDate(problemId, dateKey) {
+  const list = records.doneByDate[dateKey] || [];
+  return list.includes(problemId);
+}
+
+function getAnswerRecord(problemId) {
+  return records.answers[String(problemId)] || null;
+}
+
+function getGeminiKey() {
+  const input = document.getElementById('gemini-key').value.trim();
+  if (input) return input;
+  if (typeof GEMINI_API_KEY !== 'undefined' && GEMINI_API_KEY && GEMINI_API_KEY !== 'YOUR_GEMINI_API_KEY_HERE') {
+    return GEMINI_API_KEY;
+  }
+  return '';
+}
+
+function applyConfigApiKey() {
+  if (typeof GEMINI_API_KEY === 'undefined' || !GEMINI_API_KEY || GEMINI_API_KEY === 'YOUR_GEMINI_API_KEY_HERE') {
+    return;
+  }
+  const el = document.getElementById('gemini-key');
+  if (!el.value.trim()) el.value = GEMINI_API_KEY;
+}
+
+function init() {
+  applyConfigApiKey();
+  problems = typeof PROBLEMS !== 'undefined' ? PROBLEMS : [];
+  studyPlan = typeof STUDY_PLAN !== 'undefined' ? STUDY_PLAN : [];
+
+  const dateSel = document.getElementById('date-select');
+  if (!studyPlan.length) {
+    dateSel.innerHTML = '<option value="">plan.js を読み込めません</option>';
+  } else {
+    studyPlan.forEach(d => {
+      const opt = document.createElement('option');
+      opt.value = d.dateKey;
+      const n = (d.problems || []).length;
+      opt.textContent = `Day ${d.day}　${d.label}（${n}問）`;
+      dateSel.appendChild(opt);
+    });
+    const today = new Date();
+    const todayKey = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+    const match = studyPlan.find(d => d.dateKey === todayKey);
+    if (match) dateSel.value = match.dateKey;
+    else dateSel.value = studyPlan[0].dateKey;
+  }
+
+  if (!problems.length) {
+    document.getElementById('problem-text').textContent =
+      'problems.js を読み込めませんでした。';
+    return;
+  }
+
+  const savedKey = localStorage.getItem('minpo-last-date');
+  if (savedKey && studyPlan.some(d => d.dateKey === savedKey)) {
+    dateSel.value = savedKey;
+  }
+
+  onDateChange();
+}
+
+function onDateChange() {
+  const day = getCurrentDay();
+  if (!day) return;
+  localStorage.setItem('minpo-last-date', day.dateKey);
+  document.getElementById('day-label').textContent =
+    day.problems.length
+      ? `Day ${day.day}　${day.label}　予定 ${day.problems.length} 問`
+      : `Day ${day.day}　${day.label}　（予定なし・休み）`;
+
+  renderDayChips(day);
+  updateDayProgress(day);
+  rebuildProblemSelect(day, true);
+}
+
+function renderDayChips(day) {
+  const box = document.getElementById('day-chips');
+  box.innerHTML = '';
+  if (!day.problems.length) {
+    box.textContent = 'この日は plan.pdf 上、新規問題の予定がありません。';
+    return;
+  }
+  day.problems.forEach(id => {
+    const p = problems.find(x => x.id === id);
+    const done = isDoneOnDate(id, day.dateKey);
+    const chip = document.createElement('button');
+    chip.type = 'button';
+    chip.className = 'chip' + (done ? ' done' : '') + (currentProblemId === id ? ' active' : '');
+    chip.innerHTML = `<span class="mark">${done ? '✓' : '○'}</span> 問${id}`;
+    chip.title = p ? p.title : '';
+    chip.onclick = () => {
+      document.getElementById('problem-select').value = id;
+      loadProblem();
+    };
+    box.appendChild(chip);
+  });
+}
+
+function updateDayProgress(day) {
+  const el = document.getElementById('day-progress');
+  if (!day.problems.length) {
+    el.textContent = '';
+    return;
+  }
+  const doneCount = day.problems.filter(id => isDoneOnDate(id, day.dateKey)).length;
+  el.textContent = `実施済み ${doneCount} / ${day.problems.length}`;
+}
+
+function rebuildProblemSelect(day, shouldLoad) {
+  const sel = document.getElementById('problem-select');
+  const prevId = parseInt(sel.value, 10);
+  sel.innerHTML = '';
+  const ids = day.problems.length ? day.problems : [];
+  ids.forEach(id => {
+    const p = problems.find(x => x.id === id);
+    if (!p) return;
+    const opt = document.createElement('option');
+    opt.value = p.id;
+    const done = isDoneOnDate(p.id, day.dateKey);
+    opt.textContent = `${done ? '✓ ' : ''}${p.id}. ${p.title || '問題'}`;
+    sel.appendChild(opt);
+  });
+  if (!sel.options.length) {
+    document.getElementById('problem-text').textContent = 'この日に取り組む問題はありません（休み）。';
+    currentProblemId = null;
+    return;
+  }
+  const keep = ids.includes(prevId) ? prevId : ids[0];
+  sel.value = keep;
+  if (shouldLoad) loadProblem();
+}
+
+function currentProblem() {
+  const id = parseInt(document.getElementById('problem-select').value, 10);
+  return problems.find(x => x.id === id);
+}
+
+function toggleCorrect() {
+  correctVisible = !correctVisible;
+  const panel = document.getElementById('correct-panel');
+  const btn = document.getElementById('toggle-correct-btn');
+  if (correctVisible) {
+    panel.classList.add('is-open');
+    btn.textContent = '正解・解説を隠す';
+  } else {
+    panel.classList.remove('is-open');
+    btn.textContent = '正解・解説を表示する';
+  }
+}
+
+function loadProblem() {
+  const p = currentProblem();
+  if (!p) return;
+  currentProblemId = p.id;
+
+  document.getElementById('problem-text').textContent = p.problem;
+  document.getElementById('problem-text').classList.remove('placeholder');
+  document.getElementById('correct-text').textContent = p.correct;
+  document.getElementById('correct-text').classList.remove('placeholder');
+
+  correctVisible = false;
+  document.getElementById('correct-panel').classList.remove('is-open');
+  document.getElementById('toggle-correct-btn').textContent = '正解・解説を表示する';
+
+  const rec = getAnswerRecord(p.id);
+  document.getElementById('answer-area').value = rec ? (rec.text || '') : '';
+
+  if (rec && rec.score != null) {
+    document.getElementById('score-display').textContent = rec.score + ' / 100点';
+    document.getElementById('score-bar').style.width = rec.score + '%';
+  } else {
+    document.getElementById('score-display').textContent = '—— / 100点';
+    document.getElementById('score-bar').style.width = '0%';
+  }
+
+  const commentEl = document.getElementById('score-comment');
+  if (rec && rec.scoreComment && !rec.scoreComment.includes('採点ボタン')) {
+    commentEl.textContent = rec.scoreComment;
+    commentEl.classList.remove('placeholder');
+  } else {
+    commentEl.textContent = '採点ボタンを押すと、④の正解を基準に②の答案を採点します。';
+    commentEl.classList.add('placeholder');
+  }
+
+  const explainEl = document.getElementById('explain-output');
+  if (rec && rec.explain) {
+    explainEl.textContent = rec.explain;
+    explainEl.classList.remove('placeholder');
+    showExplainQaBlock(true);
+    renderExplainQa(rec.explainQa || []);
+  } else {
+    explainEl.textContent = 'ボタンを押すと、問題文と④の正解内容を、平易な言葉で優しく丁寧に解説します。';
+    explainEl.classList.add('placeholder');
+    showExplainQaBlock(false);
+    renderExplainQa([]);
+  }
+  document.getElementById('explain-question').value = '';
+
+  const consultEl = document.getElementById('consult-output');
+  if (rec && rec.consult) {
+    consultEl.textContent = rec.consult;
+    consultEl.classList.remove('placeholder');
+  } else {
+    consultEl.textContent = '⑤の解説を踏まえ、②の答案の改善点について相談します。';
+    consultEl.classList.add('placeholder');
+  }
+
+  updateSaveStatus(rec);
+  const day = getCurrentDay();
+  if (day) {
+    renderDayChips(day);
+    updateDayProgress(day);
+    refreshSelectLabels(day);
+  }
+}
+
+function refreshSelectLabels(day) {
+  const sel = document.getElementById('problem-select');
+  Array.from(sel.options).forEach(opt => {
+    const id = parseInt(opt.value, 10);
+    const p = problems.find(x => x.id === id);
+    const done = isDoneOnDate(id, day.dateKey);
+    opt.textContent = `${done ? '✓ ' : ''}${id}. ${p ? (p.title || '問題') : ''}`;
+  });
+}
+
+function updateSaveStatus(rec) {
+  const el = document.getElementById('save-status');
+  if (rec && rec.updatedAt) {
+    const d = new Date(rec.updatedAt);
+    el.textContent = '最終保存: ' + d.toLocaleString('ja-JP');
+  } else {
+    el.textContent = '答案はブラウザに自動保存されます（未保存）。';
+  }
+}
+
+function persistAnswer(extra) {
+  const p = currentProblem();
+  if (!p) return;
+  const key = String(p.id);
+  const prev = records.answers[key] || {};
+  records.answers[key] = {
+    ...prev,
+    text: document.getElementById('answer-area').value,
+    ...extra,
+    updatedAt: new Date().toISOString()
+  };
+  saveRecords();
+  updateSaveStatus(records.answers[key]);
+}
+
+function onAnswerInput() {
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(() => saveAnswer(true), 800);
+}
+
+function saveAnswer(silent) {
+  const p = currentProblem();
+  if (!p) return;
+  persistAnswer();
+  if (!silent) {
+    const el = document.getElementById('save-status');
+    el.textContent = '保存しました（' + new Date().toLocaleString('ja-JP') + '）';
+  }
+}
+
+function toggleDone() {
+  const p = currentProblem();
+  const day = getCurrentDay();
+  if (!p || !day) return;
+  const dateKey = day.dateKey;
+  if (!records.doneByDate[dateKey]) records.doneByDate[dateKey] = [];
+  const list = records.doneByDate[dateKey];
+  const idx = list.indexOf(p.id);
+  if (idx >= 0) list.splice(idx, 1);
+  else list.push(p.id);
+  list.sort((a, b) => a - b);
+  saveRecords();
+  saveAnswer(true);
+  renderDayChips(day);
+  updateDayProgress(day);
+  refreshSelectLabels(day);
+}
+
+const DEFAULT_GEMINI_MODELS = [
+  'gemini-2.5-flash',
+  'gemini-2.0-flash-lite',
+  'gemini-1.5-flash',
+  'gemini-2.0-flash'
+];
+
+function getGeminiModels() {
+  if (typeof GEMINI_MODELS !== 'undefined' && Array.isArray(GEMINI_MODELS) && GEMINI_MODELS.length) {
+    return GEMINI_MODELS;
+  }
+  return DEFAULT_GEMINI_MODELS;
+}
+
+function trimPrompt(text, maxLen) {
+  if (!text || text.length <= maxLen) return text;
+  return text.slice(0, maxLen) + '\n\n（※長文のため一部省略しました）';
+}
+
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+function parseRetryMs(errText) {
+  const m = String(errText).match(/retry in ([\d.]+)s/i);
+  if (m) return Math.min(60000, Math.ceil(parseFloat(m[1]) * 1000) + 500);
+  return 18000;
+}
+
+function formatGeminiError(errText, triedModels) {
+  const raw = String(errText);
+  let msg = 'Gemini API でエラーが発生しました。\n\n';
+  if (raw.includes('429') || raw.includes('RESOURCE_EXHAUSTED') || raw.includes('Quota exceeded')) {
+    msg += '【原因】無料枠の利用上限に達したか、このモデルでは利用枠が0に設定されています。\n';
+    msg += '【対処】\n';
+    msg += '・15〜60分ほど待ってから再試行\n';
+    msg += '・https://aistudio.google.com/apikey で「AIzaSy…」形式のキーを発行し config.local.js に設定\n';
+    msg += '・Google AI Studio で利用状況・課金設定を確認\n';
+    msg += '・config.local.js の GEMINI_MODELS で別モデルを指定\n\n';
+    msg += '試行したモデル: ' + triedModels.join(' → ');
+  } else if (raw.includes('API_KEY_INVALID') || raw.includes('API key not valid')) {
+    msg += '【原因】API キーが無効です。\n';
+    msg += 'Google AI Studio（https://aistudio.google.com/apikey）でキーを再発行してください。\n';
+    msg += 'キーは通常「AIzaSy」で始まります。';
+  } else {
+    msg += raw.length > 400 ? raw.slice(0, 400) + '…' : raw;
+  }
+  return msg;
+}
+
+async function callGeminiOnce(key, model, prompt, maxOutputTokens) {
+  const url =
+    'https://generativelanguage.googleapis.com/v1beta/models/' +
+    encodeURIComponent(model) +
+    ':generateContent?key=' +
+    encodeURIComponent(key);
+  const res = await fetch(url, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      contents: [{ parts: [{ text: prompt }] }],
+      generationConfig: { maxOutputTokens: maxOutputTokens || 2048, temperature: 0.3 }
+    })
+  });
+  const errText = await res.text();
+  if (!res.ok) {
+    const retryable = res.status === 429 || errText.includes('RESOURCE_EXHAUSTED');
+    const quota = errText.includes('Quota exceeded') || errText.includes('limit: 0');
+    return { ok: false, error: errText, retryable, quota, status: res.status, retryMs: parseRetryMs(errText) };
+  }
+  let data;
+  try {
+    data = JSON.parse(errText);
+  } catch {
+    return { ok: false, error: errText, retryable: false, quota: false, status: res.status, retryMs: 0 };
+  }
+  const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
+  const finishReason = data.candidates?.[0]?.finishReason;
+  if (!text) return { ok: false, error: '応答が空でした', retryable: true, quota: false, status: res.status, retryMs: 5000 };
+  return { ok: true, text, model, truncated: finishReason === 'MAX_TOKENS' };
+}
+
+async function callGemini(prompt, options) {
+  options = options || {};
+  const key = getGeminiKey();
+  if (!key) {
+    alert('Gemini API キーを設定してください。\nconfig.example.js を config.local.js にコピーし、キーを記入するか、上の入力欄に直接入力してください。');
+    return null;
+  }
+  const models = getGeminiModels();
+  const trimmed = trimPrompt(prompt, 52000);
+  const maxTokens = options.maxOutputTokens || 2048;
+  const tried = [];
+  let lastError = '';
+  let lastText = '';
+  let wasTruncated = false;
+
+  try {
+    for (const model of models) {
+      tried.push(model);
+      for (let attempt = 0; attempt < 2; attempt++) {
+        const result = await callGeminiOnce(key, model, trimmed, maxTokens);
+        if (result.ok) {
+          lastText = result.text;
+          wasTruncated = result.truncated;
+          if (wasTruncated && options.allowContinue) {
+            const more = await callGeminiOnce(
+              key,
+              model,
+              '以下は途中までの解説です。続きを欠けている部分から書き足し、全体が完結するように続けてください。重複は避けてください。\n\n---\n' + lastText,
+              Math.min(8192, maxTokens)
+            );
+            if (more.ok) lastText = lastText + '\n' + more.text;
+          }
+          return lastText;
+        }
+        lastError = result.error;
+        if (result.retryable && attempt === 0) {
+          await sleep(result.retryMs || 18000);
+          continue;
+        }
+        break;
+      }
+    }
+    alert(formatGeminiError(lastError, tried));
+    return null;
+  } catch (e) {
+    alert('通信エラー: ' + e.message);
+    return null;
+  }
+}
+
+async function grade() {
+  const p = currentProblem();
+  const answer = document.getElementById('answer-area').value.trim();
+  if (!answer) {
+    alert('②の答案欄に記入してから採点してください。');
+    return;
+  }
+
+  const btn = document.getElementById('grade-btn');
+  btn.disabled = true;
+  const commentEl = document.getElementById('score-comment');
+  commentEl.classList.remove('placeholder');
+  commentEl.innerHTML = '<span class="spinner"></span>Gemini で採点中…';
+
+  const prompt = `あなたは民法の教員です。以下の【問題】と【正解（採点基準）】に基づき、学生が②に記入した【学生の答案】を100点満点で採点してください。
+
+【問題】
+${p.problem}
+
+【正解（採点基準）】
+${p.correct}
+
+【学生の答案】
+${answer}
+
+出力形式（必ずこの形式で）：
+点数: XX点
+コメント: （採点のポイントと改善点を日本語で200字程度で）`;
+
+  const result = await callGemini(prompt);
+  btn.disabled = false;
+
+  if (!result) {
+    commentEl.textContent = '採点に失敗しました。';
+    return;
+  }
+
+  const match = result.match(/点数[：:]\s*(\d+)/);
+  const score = match ? Math.min(100, parseInt(match[1], 10)) : null;
+  if (score !== null) {
+    document.getElementById('score-display').textContent = score + ' / 100点';
+    document.getElementById('score-bar').style.width = score + '%';
+  }
+  const cmatch = result.match(/コメント[：:]\s*([\s\S]+)/);
+  const scoreComment = cmatch ? cmatch[1].trim() : result;
+  commentEl.textContent = scoreComment;
+  persistAnswer({ score, scoreComment });
+  saveAnswer(true);
+}
+
+function showExplainQaBlock(show) {
+  document.getElementById('explain-qa-block').style.display = show ? 'block' : 'none';
+}
+
+function renderExplainQa(qaList) {
+  const box = document.getElementById('explain-qa-thread');
+  box.innerHTML = '';
+  if (!qaList || !qaList.length) return;
+  qaList.forEach((item, i) => {
+    const el = document.createElement('div');
+    el.className = 'explain-qa-item';
+    el.innerHTML =
+      '<div class="qa-label">質問 ' + (i + 1) + '</div>' +
+      '<div class="qa-body">' + escapeHtml(item.q) + '</div>' +
+      '<div class="qa-label" style="margin-top:10px;">回答</div>' +
+      '<div class="qa-body">' + escapeHtml(item.a) + '</div>';
+    box.appendChild(el);
+  });
+}
+
+function escapeHtml(s) {
+  return String(s)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;');
+}
+
+function getExplainText() {
+  const el = document.getElementById('explain-output');
+  const t = el.textContent.trim();
+  if (!t || t.includes('ボタンを押すと') || t.includes('解説を生成中')) return '';
+  return t;
+}
+
+async function explain() {
+  const p = currentProblem();
+  const out = document.getElementById('explain-output');
+  const btn = document.getElementById('explain-btn');
+  btn.disabled = true;
+  out.classList.remove('placeholder');
+  out.innerHTML = '<span class="spinner"></span>解説を生成中…（長文のため少々お待ちください）';
+
+  const prompt = `あなたは民法の家庭教師です。法学部の初学者に向けて、以下の【問題】と【正解・解説】の内容を、平易な言葉で優しく丁寧に、わかりやすく解説してください。
+専門用語には簡単な説明を添え、なぜその結論になるのかの理由も含めてください。解説は最後まで完結させ、途中で切らないでください。
+
+【問題】
+${p.problem}
+
+【正解・解説】
+${p.correct}`;
+
+  const result = await callGemini(prompt, { maxOutputTokens: 8192, allowContinue: true });
+  btn.disabled = false;
+  if (!result) {
+    out.textContent = '解説の取得に失敗しました。';
+    return;
+  }
+  out.textContent = result;
+  showExplainQaBlock(true);
+  const prev = getAnswerRecord(p.id);
+  persistAnswer({ explain: result, explainQa: (prev && prev.explainQa) ? prev.explainQa : [] });
+  renderExplainQa((prev && prev.explainQa) || []);
+  out.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+async function askExplain() {
+  const p = currentProblem();
+  const explainText = getExplainText();
+  if (!explainText) {
+    alert('先に「問題と正解を平易に解説する」を実行してください。');
+    return;
+  }
+  const question = document.getElementById('explain-question').value.trim();
+  if (!question) {
+    alert('質問内容を入力してください。');
+    return;
+  }
+
+  const btn = document.getElementById('explain-ask-btn');
+  const thread = document.getElementById('explain-qa-thread');
+  btn.disabled = true;
+
+  const pending = document.createElement('div');
+  pending.className = 'explain-qa-item';
+  pending.innerHTML = '<div class="qa-label">質問（送信中…）</div><div class="qa-body">' + escapeHtml(question) + '</div>';
+  thread.appendChild(pending);
+
+  const rec = getAnswerRecord(p.id) || {};
+  const history = rec.explainQa || [];
+  let historyText = '';
+  history.forEach((h, i) => {
+    historyText += '\n【過去の質問' + (i + 1) + '】\n' + h.q + '\n【過去の回答' + (i + 1) + '】\n' + h.a + '\n';
+  });
+
+  const prompt = `あなたは民法の家庭教師です。学生が⑤の平易な解説を読んで質問しています。解説の内容に沿って、優しく丁寧に、わかりやすく答えてください。
+
+【問題】
+${p.problem}
+
+【⑤の平易な解説】
+${explainText}
+${historyText}
+
+【今回の質問】
+${question}`;
+
+  const answer = await callGemini(prompt, { maxOutputTokens: 4096 });
+  btn.disabled = false;
+  thread.removeChild(pending);
+
+  if (!answer) return;
+
+  const qa = { q: question, a: answer, at: new Date().toISOString() };
+  const newList = history.concat([qa]);
+  persistAnswer({ explainQa: newList });
+  document.getElementById('explain-question').value = '';
+  renderExplainQa(newList);
+  thread.lastElementChild.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+async function consult() {
+  const p = currentProblem();
+  const answer = document.getElementById('answer-area').value.trim();
+  const explainText = getExplainText();
+  const scoreComment = document.getElementById('score-comment').textContent.trim();
+  const out = document.getElementById('consult-output');
+
+  if (!answer) {
+    alert('②の答案欄に記入してください。');
+    return;
+  }
+  if (!explainText) {
+    alert('先に⑤「問題と正解を平易に解説する」を実行してください。');
+    return;
+  }
+
+  const btn = document.getElementById('consult-btn');
+  btn.disabled = true;
+  out.classList.remove('placeholder');
+  out.innerHTML = '<span class="spinner"></span>改善点を分析中…';
+
+  const prompt = `あなたは民法の家庭教師です。⑤で行った平易な解説を踏まえ、学生の答案の改善点を具体的に、優しく丁寧にアドバイスしてください。
+
+【問題】
+${p.problem}
+
+【正解・採点基準】
+${p.correct}
+
+【⑤の平易な解説（参考）】
+${explainText}
+
+【学生の答案（②）】
+${answer}
+
+【③の採点コメント（参考）】
+${scoreComment}
+
+改善点を具体的に教えてください。`;
+
+  const result = await callGemini(prompt);
+  btn.disabled = false;
+  out.textContent = result || '相談の取得に失敗しました。';
+  persistAnswer({ consult: out.textContent });
+}
+
+init();
+</script>
+</body>
+</html>
