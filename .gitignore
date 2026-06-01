@@ -1,0 +1,11 @@
+# API キー（ローカル設定）
+config.local.js
+# 一時・デバッグ用
+plan_extract.txt
+plan_sample.txt
+plan_parse.txt
+plan_parse2.txt
+titles_debug.txt
+# OS
+.DS_Store
+Thumbs.db
